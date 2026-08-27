@@ -115,6 +115,10 @@ files.set(
   generateTestConstantsFile(iconSet, context),
 );
 
+// The package version mirrors the lucide-static release, so a release script can
+// read the tag straight out of the checkout.
+files.set('.lucide-version', `${context.lucideVersion}\n`);
+
 const license = await readLicense();
 
 if (license) {
@@ -178,6 +182,7 @@ function report() {
       `icons: ${iconSet.icons.length}`,
       `alternative names: ${iconSet.aliases.length}`,
       `removed names: ${iconSet.removed.length}`,
+      `version to tag the package with: ${context.lucideVersion}`,
     ].join('\n'),
   );
 

@@ -16,7 +16,7 @@ compile-time-checked constant for every icon name.
 ## Installation
 
 ```swift
-.package(url: "{{PACKAGE_URL}}", from: "1.0.0")
+.package(url: "{{PACKAGE_URL}}", from: "{{LUCIDE_VERSION}}")
 ```
 
 ```swift
@@ -25,6 +25,24 @@ compile-time-checked constant for every icon name.
 
 The font registers itself with Core Text the first time you use it, so there is
 nothing to add to `Info.plist` and nothing to call at launch.
+
+## Versioning
+
+The package version is the `lucide-static` release its font came from, so
+`{{LUCIDE_VERSION}}` here means Lucide `{{LUCIDE_VERSION}}` — there is no second
+version to reconcile. The Swift API is stable across those releases: icons that
+Lucide removes or renames arrive as deprecations rather than breaking changes,
+which is the point of the generated constants.
+
+```swift
+LucideFont.lucideVersion  // "{{LUCIDE_VERSION}}"
+LucideFont.iconCount      // {{ICON_COUNT}}
+```
+
+The package root also holds a `.lucide-version` file, so a release script can
+read the tag straight out of the checkout. If the package itself needs a fix
+before the next Lucide release, bump the patch and let the following
+font-matching tag skip that patch number.
 
 ## Text or image?
 
@@ -218,10 +236,13 @@ pnpm build:swift --module={{MODULE}} --repo-url={{PACKAGE_URL}} --out=../{{MODUL
 
 It reports what changed (`added since the last run`, `gone since the last run`),
 and `--check` instead of writing tells you whether this package is up to date.
-Then run the tests:
+Then test and release, tagging with the Lucide version the generator wrote:
 
 ```sh
 swift test
+git commit -am "Lucide $(cat .lucide-version)"
+git tag -a "$(cat .lucide-version)" -m "Lucide $(cat .lucide-version)"
+git push && git push origin "$(cat .lucide-version)"
 ```
 
 ## License
