@@ -58,8 +58,8 @@ since the older release still exists under its old name on the newer line, as a
 deprecated alternative that points at the replacement.
 
 Every release carries a diff: the notes spell out what was added, removed and
-renamed, and a `lucide-<from>-to-<to>.json` asset holds the same thing for
-tooling. To see a jump across several releases in one go — an upgrade from
+renamed, `Changes/lucide-<from>-to-<to>.json` keeps it in the repository, and the
+same file is attached to the release. To see a jump across several releases in one go — an upgrade from
 `1.27.0` straight to the newest, say — the generator answers it directly:
 
 ```sh
