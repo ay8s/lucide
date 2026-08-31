@@ -7,6 +7,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./src/main.ts",
+    "diff": "node ./src/diff.ts",
     "test": "vitest run"
   },
   "keywords": [],

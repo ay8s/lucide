@@ -55,6 +55,33 @@ next release by being on the branch the workflow points at.
 `workflow_dispatch` takes a `version` and a `dry-run` flag for trying a release
 without publishing it.
 
+## Diffing two releases
+
+Jumping several Lucide releases at once, `pnpm diff:swift` answers what that
+means for the Swift side without reading each release's index in between:
+
+```sh
+pnpm diff:swift --repo=../LucideSwift --from=1.27.0 --to=1.38.0
+```
+
+`--from` and `--to` each take a version tag, any git ref of the package
+repository, a path to a `lucide-icons.json`, or `working` for the package's
+working tree, which is the default for `--to`. Add `--json=<path>` for the
+machine-readable version, or `--json=-` for stdout.
+
+It splits the change into what each part means for a call site:
+
+| Section         | What it means                                                              |
+| --------------- | -------------------------------------------------------------------------- |
+| `renamed`       | still compiles, as a deprecated alternative with a fix-it to the new name   |
+| `removed`       | compiles with a deprecation, but has no glyph: needs a different icon       |
+| `added`         | new icons to use                                                           |
+| `aliasesAdded`  | new alternative names for existing icons                                    |
+| `movedCodePoints` | should always be empty: an icon changing code point means a name now draws a different glyph, and the command exits non-zero |
+
+The release workflow runs it for every release, putting the readable version in
+the release notes and attaching the JSON.
+
 ## Generating an older Lucide version
 
 To keep a Swift app in sync with something else that is pinned to an older

@@ -21,6 +21,7 @@
     "build:outline-icons": "pnpm --filter outline-svg start",
     "build:font": "pnpm --filter build-font start",
     "build:swift": "pnpm --filter build-swift start",
+    "diff:swift": "pnpm --filter build-swift diff",
     "optimize": "node ./scripts/optimizeSvgs.mts",
     "addjsons": "node ./scripts/addMissingIconJsonFiles.mts",
     "checkIcons": "node ./scripts/checkIconsAndCategories.mts",

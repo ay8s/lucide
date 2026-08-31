@@ -57,6 +57,18 @@ Moving between lines is safe in the direction you'd expect: an icon renamed
 since the older release still exists under its old name on the newer line, as a
 deprecated alternative that points at the replacement.
 
+Every release carries a diff: the notes spell out what was added, removed and
+renamed, and a `lucide-<from>-to-<to>.json` asset holds the same thing for
+tooling. To see a jump across several releases in one go — an upgrade from
+`1.27.0` straight to the newest, say — the generator answers it directly:
+
+```sh
+pnpm diff:swift --repo=../{{MODULE}} --from=1.27.0 --to={{LUCIDE_VERSION}}
+```
+
+Renames come out with both Swift names (`.smile` → `.faceSlightlySmiling`), so
+the list doubles as the edit list.
+
 ## Text or image?
 
 Every icon can be drawn two ways, and the text one is almost always what you
