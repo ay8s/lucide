@@ -42,6 +42,19 @@ pnpm build:font && pnpm build:swift --font-dir=./lucide-font --version=next
 pnpm build:swift --check --module=LucideSwift --out=../LucideSwift
 ```
 
+## Releasing automatically
+
+The package repository runs the release itself: a daily job in
+`.github/workflows/release-from-lucide.yml` compares npm's newest
+`lucide-static` against the package's `.lucide-version`, and when they differ it
+checks out this generator, checks out `lucide-icons/lucide` at that release for
+the icon metadata, regenerates, runs `swift test` and only then commits, tags
+and releases. Nothing calls into this repository, so a change here reaches the
+next release by being on the branch the workflow points at.
+
+`workflow_dispatch` takes a `version` and a `dry-run` flag for trying a release
+without publishing it.
+
 ## Generating an older Lucide version
 
 To keep a Swift app in sync with something else that is pinned to an older
