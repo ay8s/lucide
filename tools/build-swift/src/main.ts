@@ -84,6 +84,15 @@ const context: GenerationContext = {
 };
 
 const previousNames = await readPreviousIconNames(targetDir);
+const previousVersion = await readPreviousVersion(targetDir);
+
+// `latest` moves, so say so plainly when a regeneration would change the Lucide
+// version of a package that already exists.
+if (previousVersion && previousVersion !== assets.lucideVersion) {
+  console.log(
+    `note: ${targetDir} holds lucide-static@${previousVersion}, generating ${assets.lucideVersion}. Pass --version=${previousVersion} to keep it where it is.`,
+  );
+}
 
 const files: OutputFiles = await readTemplate(templateDir, {
   MODULE: moduleName,
@@ -152,6 +161,17 @@ report();
 async function readLicense(): Promise<string | null> {
   try {
     return await fs.readFile(path.join(repoRoot, 'LICENSE'), 'utf-8');
+  } catch {
+    return null;
+  }
+}
+
+/** The Lucide version of the package that is already in `targetDir`, if any. */
+async function readPreviousVersion(directory: string): Promise<string | null> {
+  try {
+    const contents = await fs.readFile(path.join(directory, '.lucide-version'), 'utf-8');
+
+    return contents.trim() || null;
   } catch {
     return null;
   }

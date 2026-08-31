@@ -44,6 +44,19 @@ read the tag straight out of the checkout. If the package itself needs a fix
 before the next Lucide release, bump the patch and let the following
 font-matching tag skip that patch number.
 
+`main` tracks the newest Lucide release. Older ones are kept on `release/*`
+branches so an app can stay in step with something else pinned to that version —
+a web app on the same Lucide, for instance. Pin those exactly, since `from:`
+would climb to the newest tag:
+
+```swift
+.package(url: "{{PACKAGE_URL}}", exact: "1.27.0")
+```
+
+Moving between lines is safe in the direction you'd expect: an icon renamed
+since the older release still exists under its old name on the newer line, as a
+deprecated alternative that points at the replacement.
+
 ## Text or image?
 
 Every icon can be drawn two ways, and the text one is almost always what you

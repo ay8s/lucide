@@ -42,6 +42,35 @@ pnpm build:font && pnpm build:swift --font-dir=./lucide-font --version=next
 pnpm build:swift --check --module=LucideSwift --out=../LucideSwift
 ```
 
+## Generating an older Lucide version
+
+To keep a Swift app in sync with something else that is pinned to an older
+Lucide — a web app on 1.27.0, say — generate that release from the font *and*
+the icon metadata of the same release. The metadata matters: an icon renamed
+since then is canonical under its new name in `icons/` today, and pairing
+today's metadata with an old font would silently drop it.
+
+```sh
+# The icon metadata as it was at that release.
+git fetch --no-tags https://github.com/lucide-icons/lucide.git tag 1.27.0
+git worktree add --detach /tmp/lucide-1.27 1.27.0
+
+# A release branch off the package repository's first commit, so its history
+# holds that version alone.
+git -C ../LucideSwift worktree add -b release/1.27 /tmp/LucideSwift-1.27 <first commit>
+
+pnpm build:swift \
+  --version=1.27.0 \
+  --icons-dir=/tmp/lucide-1.27/icons \
+  --module=LucideSwift \
+  --repo-url=https://github.com/bufferapp/LucideSwift.git \
+  --out=/tmp/LucideSwift-1.27
+```
+
+Then test, commit and tag in that worktree as usual, and clean up with
+`git worktree remove`. A run with matching font and metadata reports no
+unreleased icons — if it lists any, the two are out of step.
+
 ## How it works
 
 `codepoints.json` maps every icon name Lucide has ever released to a code point.
